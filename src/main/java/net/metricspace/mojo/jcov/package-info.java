@@ -21,31 +21,8 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package net.metricspace.mojo.jcov;
-
-import java.io.File;
-
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Common superclass for all JCov plugin Mojo's.
+ * JCov Maven integration build steps.
  */
-abstract class AbstractJCovMojo extends AbstractMojo {
-    /**
-     * The location to which the template file will be written.
-     */
-    @Parameter(property = "template",
-               defaultValue = "${project.build.directory}/jcov/template.xml",
-               required = true)
-    private File template;
-
-    /**
-     * Get the location to which the template file will be written.
-     *
-     * @return The location of the template file.
-     */
-    protected File getTemplate() {
-        return template;
-    }
-}
+package net.metricspace.mojo.jcov;

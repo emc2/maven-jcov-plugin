@@ -5,23 +5,154 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.metricspace</groupId>
   <packaging>maven-plugin</packaging>
-  <artifactId>jcov-maven-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
+  <artifactId>jcov-maven-plugin</artifactId>
   <name>JCov Maven Plugin</name>
   <description>A Maven plugin for the JCov coverage reporting tool</description>
+  <url>https://github.com/emc2/maven-jcov-plugin</url>
+  <inceptionYear>2018</inceptionYear>
 
+  <scm>
+    <connection>scm:git:git@github.com:emc2/maven-jcov-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:emc2/maven-jcov-plugin.git</developerConnection>
+    <url>https://github.com/emc2/maven-jcov-plugin</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <id>eric.mccorkle</id>
+      <name>Eric L. McCorkle</name>
+      <email>eric@metricspace.net</email>
+    </developer>
+  </developers>
+
+  <repositories>
+    <repository>
+      <id>static-repo</id>
+      <releases>
+        <enabled>true</enabled>
+        <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>file://${project.basedir}/lib</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>1.8</java.version>
+    <tools.jar>${java.home}/../lib/tools.jar</tools.jar>
+    <jcov.filesaver.jar>jcov_file_saver.jar</jcov.filesaver.jar>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
+      <version>3.5.2</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.reporting</groupId>
+      <artifactId>maven-reporting-api</artifactId>
       <version>3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.reporting</groupId>
+      <artifactId>maven-reporting-impl</artifactId>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.4</version>
+      <version>3.5.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.doxia</groupId>
+      <artifactId>doxia-sink-api</artifactId>
+      <version>1.1.2</version>
+    </dependency>
+    <dependency>
+      <groupId>jdk.tools</groupId>
+      <artifactId>jdk.tools</artifactId>
+      <version>jdk1.8.0</version>
+      <scope>system</scope>
+      <systemPath>${tools.jar}</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.sun</groupId>
+      <artifactId>jcov</artifactId>
+      <version>3.0-beta-2</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>${jcov.filesaver.jar}</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <testSourceDirectory>${test.unit.srcs}</testSourceDirectory>
+
+    <plugins>
+      <!-- Java compiler configuration -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <compilerVersion>${java.version}</compilerVersion>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.4</version>
+        <executions>
+          <execution>
+            <id>default-descriptor</id>
+            <phase>process-classes</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.2</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.sun</groupId>
+                  <artifactId>jcov</artifactId>
+                  <version>3.0-beta-2</version>
+                  <type>jar</type>
+                  <overWrite>false</overWrite>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

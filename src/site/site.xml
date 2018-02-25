@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+<body>
+  <menu name="Overview">
+    <item name="Introduction" href="index.html"/>
+    <item name="Goals" href="plugin-info.html"/>
+    <item name="Usage" href="usage.html"/>
+    <item name="FAQ" href="faq.html"/>
+    <item name="License"
+          href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"/>
+  </menu>
+
+  <menu name="Examples">
+    <item name="Coverage for Surefire Unit Tests"
+          href="examples/surefire.html"/>
+    <item name="Combined Surefire and Failsafe Coverage"
+          href="examples/surefire-failsafe.html"/>
+  </menu>
+</body>
+</project>

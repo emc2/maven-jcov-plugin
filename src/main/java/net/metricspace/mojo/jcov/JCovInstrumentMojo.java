@@ -36,10 +36,25 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Instrument phase.  This instruments a set of classes, adding the
- * coverage-counting bytecodes.  This phase is designed to generate a
- * mirror class directory containing the instrumented classes, and
- * should run after the compile phase, but before test-compile.
+ * Instrument classes for coverage-reporting.  Instrumented classes
+ * contain extra code which collects coverage information, which is
+ * written out to a coverage file.  Instrumented classes should not be
+ * included in the final JAR, and only core classes (i.e. not test
+ * classes) should be instrumented.  Therefore, the default behavior
+ * for this task is to instrument the main build class directory,
+ * producing a mirror class directory containing the instrumented
+ * classes (the original classes are not modified).  Tests should
+ * therefore use the instrumented class directory.
+ * <p>
+ * Instrumentation will also produce a template file, which is
+ * necessary for merging coverage data as well as generating reports.
+ * <p>
+ * This goal can be configured to instrument any number of class
+ * directories.
+ * <p>
+ * Finally, this phase will also create a JAR file containing
+ * additional coverage reporting code.  This must be put on the
+ * classpath of any tests which wish to generate coverage information.
  */
 @Mojo(name = "instrument",
       defaultPhase = LifecyclePhase.PROCESS_CLASSES)
@@ -50,7 +65,9 @@ public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
     private static final String FILE_SAVER_JAR_NAME = "/jcov_file_saver.jar";
 
     /**
-     * Path at which the file saver JAR will be created.
+     * The path at which the file saver JAR will be created.
+     *
+     * @parameter
      */
     @Parameter(property = "jcovFileSaverJar",
                defaultValue =

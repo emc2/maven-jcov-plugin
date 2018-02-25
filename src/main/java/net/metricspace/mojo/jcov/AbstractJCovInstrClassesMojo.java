@@ -26,23 +26,46 @@ package net.metricspace.mojo.jcov;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
-import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-public abstract class AbstractJCovInstrClassesMojo extends AbstractJCovMojo {
-    private static String DEFAULT_BASE_DIR = "project.build.outputDirectory";
-    private static String DEFAULT_BUILD_DIR = "project.build.directory";
-    private static String JCOV_CLASSES_DIR = "/jcov-classes";
+/**
+ * Common subclass for Mojo's that need to know where to find
+ * instrumented classes.
+ */
+abstract class AbstractJCovInstrClassesMojo extends AbstractJCovMojo {
+    /**
+     * Maven variable for the default class directory.
+     */
+    private static final String DEFAULT_BASE_DIR =
+        "project.build.outputDirectory";
 
+    /**
+     * Maven variable for the build directory.
+     */
+    private static final String DEFAULT_BUILD_DIR = "project.build.directory";
+
+    /**
+     * Subdirectory for default instrumented classes.
+     */
+    private static final String JCOV_CLASSES_DIR = "/jcov-classes";
+
+    /**
+     * Class instrumentations to perform.
+     */
     @Parameter(property = "instrumentations")
     private List<Instrumentation> instrumentations;
 
+    /**
+     * The Maven project parameter.
+     */
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     protected MavenProject project;
 
+    /**
+     * Get the instrumentations to perform.
+     */
     protected List<Instrumentation> getInstrumentations() {
         if (instrumentations.isEmpty()) {
             final File basedir =

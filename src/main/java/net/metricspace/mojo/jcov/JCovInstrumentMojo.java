@@ -44,13 +44,17 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "instrument",
       defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
+    /**
+     * Resource path to file saver JAR.
+     */
     private static final String FILE_SAVER_JAR_NAME = "/jcov_file_saver.jar";
 
     /**
-     * Name of the Surefire coverage report.
+     * Path at which the file saver JAR will be created.
      */
     @Parameter(property = "jcovFileSaverJar",
-               defaultValue = "${project.build.directory}/jcov/jcov_file_saver.jar",
+               defaultValue =
+               "${project.build.directory}/jcov/jcov_file_saver.jar",
                required = true)
     private File jcovFileSaverJar;
 
@@ -59,6 +63,9 @@ public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
      */
     private final Instr instr = new Instr();
 
+    /**
+     * Create the file saver JAR.
+     */
     private void createFileSaverJar() throws MojoExecutionException {
         try {
             if (!jcovFileSaverJar.isFile()) {
@@ -79,8 +86,11 @@ public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void execute() throws MojoExecutionException {
+    public final void execute() throws MojoExecutionException {
         createFileSaverJar();
 
         try {
@@ -90,9 +100,9 @@ public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
 
                 getLog().info("Instrumenting classes in " + baseDir.getPath() +
                               ", outputting to " + instrDir.getPath());
-                template.getParentFile().mkdirs();
+                getTemplate().getParentFile().mkdirs();
                 instr.instrumentFiles(new File[] { baseDir }, instrDir, null);
-                instr.finishWork(template.getPath());
+                instr.finishWork(getTemplate().getPath());
             }
         } catch(final IOException e) {
             throw new MojoExecutionException(

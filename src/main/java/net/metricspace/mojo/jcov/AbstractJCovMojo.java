@@ -28,12 +28,24 @@ import java.io.File;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-public abstract class AbstractJCovMojo extends AbstractMojo {
+/**
+ * Common superclass for all JCov plugin Mojo's.
+ */
+abstract class AbstractJCovMojo extends AbstractMojo {
     /**
-     * Template file.
+     * The location to which the template file will be written.
      */
     @Parameter(property = "template",
                defaultValue = "${project.build.directory}/jcov/template.xml",
                required = true)
     protected File template;
+
+    /**
+     * Get the location to which the template file will be written.
+     *
+     * @return The location of the template file.
+     */
+    protected File getTemplate() {
+        return template;
+    }
 }

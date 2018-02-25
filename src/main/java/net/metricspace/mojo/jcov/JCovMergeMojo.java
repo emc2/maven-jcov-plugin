@@ -24,12 +24,8 @@
 package net.metricspace.mojo.jcov;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 import com.sun.tdk.jcov.Merger;
 import com.sun.tdk.jcov.data.Result;
@@ -39,6 +35,9 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+/**
+ * Build step to merge multiple JCov coverage files into a combined file.
+ */
 @Mojo(name = "merge",
       defaultPhase = LifecyclePhase.PRE_SITE)
 public class JCovMergeMojo extends AbstractJCovMojo {
@@ -46,7 +45,8 @@ public class JCovMergeMojo extends AbstractJCovMojo {
      * Base name for combined coverage file.
      */
     @Parameter(property = "combinedCoverageFile",
-               defaultValue = "${project.build.directory}/jcov/coverage/combined-coverage.xml",
+               defaultValue =
+               "${project.build.directory}/jcov/coverage/combined-coverage.xml",
                required = true)
     private File combinedCoverageFile;
 
@@ -56,10 +56,16 @@ public class JCovMergeMojo extends AbstractJCovMojo {
     @Parameter(property = "coverageFiles", required = true)
     private List<File> coverageFiles;
 
+    /**
+     * JCov report merger.
+     */
     private final Merger merger = new Merger();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void execute() throws MojoExecutionException {
+    public final void execute() throws MojoExecutionException {
         final Result[] all = new Result[coverageFiles.size()];
         int i = 0;
 

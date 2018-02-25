@@ -33,8 +33,6 @@ import com.sun.tdk.jcov.RepGen;
 import com.sun.tdk.jcov.data.FileFormatException;
 import com.sun.tdk.jcov.data.Result;
 import com.sun.tdk.jcov.processing.ProcessingException;
-import com.sun.tdk.jcov.report.ReportGenerator;
-import com.sun.tdk.jcov.report.ReportGeneratorSPI;
 
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -42,6 +40,9 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.reporting.AbstractMavenReport;
 import org.apache.maven.reporting.MavenReportException;
 
+/**
+ * JCov report generator.
+ */
 @Mojo(name = "report",
       defaultPhase = LifecyclePhase.SITE)
 public class JCovReport extends AbstractMavenReport {
@@ -57,7 +58,7 @@ public class JCovReport extends AbstractMavenReport {
      * Format for generated reports.
      */
     @Parameter(property = "format",
-               defaultValue= "")
+               defaultValue = "")
     private String format;
 
     /**
@@ -86,40 +87,61 @@ public class JCovReport extends AbstractMavenReport {
      * Regular expression for coverage files.
      */
     @Parameter(property = "coverageFileRegex",
-               defaultValue= "([^\\.]+)-coverage\\.xml")
+               defaultValue = "([^\\.]+)-coverage\\.xml")
     private String coverageFileRegex;
 
+    /**
+     * JCov report generator.
+     */
     private final RepGen repgen = new RepGen();
 
+    /**
+     * @return The string {@code "jcov-report"}.
+     */
     @Override
-    public String getOutputName() {
+    public final String getOutputName() {
         return "jcov-report";
     }
 
+    /**
+     * @return The string {@code "JCov Coverage Reports"}.
+     */
     @Override
-    public String getName(final Locale locale) {
+    public final String getName(final Locale locale) {
         return "JCov Coverage Reports";
     }
 
+    /**
+     * @return The string {@code "Coverage reports for test suites"}.
+     */
     @Override
-    public String getDescription(Locale locale) {
+    public final String getDescription(Locale locale) {
         return "Coverage reports for test suites";
     }
 
-    private void makeReport(final String actualFormat,
+    /**
+     * Write out a single report.
+     *
+     * @param format The format of the report to write.
+     * @param pattern The pattern to extract the report name.
+     * @param coverageFile The coverage file from which to generate the report.
+     * @throws MavenReportException If an error occurs during report
+     *                              generation.
+     */
+    private void makeReport(final String format,
                             final Pattern pattern,
-                            final File f)
+                            final File coverageFile)
         throws MavenReportException {
-        final Matcher matcher = pattern.matcher(f.getName());
+        final Matcher matcher = pattern.matcher(coverageFile.getName());
 
-        if (!f.isFile()) {
-            getLog().warn("Report file " + f.getPath() +
+        if (!coverageFile.isFile()) {
+            getLog().warn("Report file " + coverageFile.getPath() +
                           " does not exist");
             return;
         }
 
         if (!matcher.matches()) {
-            getLog().warn("Report file " + f.getPath() +
+            getLog().warn("Report file " + coverageFile.getPath() +
                           " does not match report file regex");
             return;
         }
@@ -131,26 +153,29 @@ public class JCovReport extends AbstractMavenReport {
 
         final String repname = matcher.group(1);
         final File reportDir = new File(reportsDir, repname);
-        final Result result = new Result(f.getPath());
+        final Result result = new Result(coverageFile.getPath());
 
         try {
             getLog().info("Generating report " + repname);
-            repgen.generateReport(actualFormat, reportDir.getPath(),
+            repgen.generateReport(format, reportDir.getPath(),
                                   result, srcRoot.getPath());
         } catch(final ProcessingException e) {
             throw new MavenReportException("Error processing coverage file " +
-                                           f.getPath(), e);
+                                           coverageFile.getPath(), e);
         } catch(final FileFormatException e) {
             throw new MavenReportException("Invalid coverage file " +
-                                           f.getPath(), e);
+                                           coverageFile.getPath(), e);
         } catch(final Exception e) {
             throw new MavenReportException("Exception generating report for " +
-                                           f.getPath(), e);
+                                           coverageFile.getPath(), e);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void executeReport(final Locale locale)
+    public final void executeReport(final Locale locale)
         throws MavenReportException {
         final String actualFormat = format == null ? null :
             (format.equals("") ? null : format);

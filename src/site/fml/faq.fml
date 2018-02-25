@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faqs id="FAQ" title="Frequently Asked Questions">
+  <part id="General">
+    <faq id="jcov">
+      <question>What is JCov?</question>
+      <answer>
+        <p>
+          JCov is a coverage reporting tool maintained as part of the
+          tools repository of the OpenJDK project.  It is the coverage
+          tool used by the OpenJDK developers for internal quality
+          purposes.
+        </p>
+      </answer>
+    </faq>
+
+    <faq id="coverage">
+      <question>What is a coverage report?</question>
+      <answer>
+        <p>
+          Coverage reports show which parts of a program were touched
+          during the execution of a program or set of programs.  They
+          are most commonly used as part of software quality testing
+          to find deficiencies in an existing test suite.
+        </p>
+      </answer>
+    </faq>
+
+    <faq id="working">
+      <question>How does JCov work?</question>
+      <answer>
+        <p>
+          JCov instruments a set of classes, inserting additional code
+          at various points to allow it to determine which parts of
+          the source were executed.  When the instrumented classes are
+          run, a special JAR is added to the classpath which collects
+          this information and writes it out to an XML report.
+          Finally, these XML reports can be merged or processed into a
+          variety of formats, including HTML and text.
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>

@@ -1,0 +1,191 @@
+ ------
+ Usage
+ ------
+ Eric L. McCorkle
+ ------
+ February 24th, 2018
+
+~~ Copyright (c) 2018, Eric McCorkle. All rights reserved.
+~~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+~~
+~~ This code is free software; you can redistribute it and/or modify it
+~~ under the terms of the GNU General Public License version 2 only, as
+~~ published by the Free Software Foundation.  Oracle designates this
+~~ particular file as subject to the "Classpath" exception as provided
+~~ by Oracle in the LICENSE file that accompanied this code.
+~~
+~~ This code is distributed in the hope that it will be useful, but WITHOUT
+~~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+~~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+~~ version 2 for more details (a copy is included in the LICENSE file that
+~~ accompanied this code).
+~~
+~~ You should have received a copy of the GNU General Public License version
+~~ 2 along with this work; if not, write to the Free Software Foundation,
+~~ Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+Usage
+
+  The Maven JCov Plugin integrates with the Maven build lifecycle to
+  manage the generation of coverage information and reports using the
+  JCov tool.
+
+* Instrumenting the Classes
+
+  The first step in using the JCov Plugin is to prepare for instrumented
+  execution by instrumenting the classes and creating a jar file usable for
+  collecting coverage information from test execution.
+
+  The JCov Plugin can perform this instrumentation from the command
+  line as follows:
+
++-----
+  mvn jcov:instrument
++-----
+
+  This will perform instrumentation using the defaults, which will
+  instrument the main classfile directory.  The instrumentation can be
+  more precisely controlled through configurations, however.  The
+  <<<instrumentations>>> configuration can provide multiple base class
+  and instrumented class directory pairs.  The <<<template>>> configuration
+  controls where to output the template XML file.  Finally, the
+  <<<jcovFileSaverJar>>> configuration controls where to place the
+  file saver jar.  In almost all cases, however, the default values
+  should suffice.
+
+* Instrumented Test Execution
+
+  Coverage information is typically gathered from test execution.  The JCov
+  Plugin defaults assume that only classfiles for primary sources will be
+  instrumented and have coverage information collected; for most purposes,
+  we do not wish to collect coverage information about test sources.
+
+  The Surefire and Failsafe test plugin both integrate easily with the
+  JCov plugin as follows:
+
++-----
+<project>
+  [...]
+  <build>
+    <plugins>
+      [...]
+      <plugin>
+        <groupId>net.metricspace</groupId>
+        <artifactId>jcov-maven-plugin</artifactId>
+        <configuration>
+          [...]
+          <jcovFileSaverJar>${jcov_file_saver.jar}</jcovFileSaverJar>
+          <coverageFiles>
+            <coverageFile>${jcov.surefire.coverage.xml}</coverageFile>
+            <coverageFile>${jcov.failsafe.coverage.xml}</coverageFile>
+          </coverageFiles>
+        </configuration>
+        <executions>
+          <execution>
+            <id>instrument</id>
+            <goals>
+              <goal>instrument</goal>
+            </goals>
+          </execution>
+          [...]
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!-- Use the jcov instrumented class file directory -->
+          <classesDirectory>${project.build.instr.outputDirectory}</classesDirectory>
+          <!-- Add jcov_file_saver.jar to classpath -->
+          <additionalClasspathElements>
+            <additionalClasspathElement>${jcov_file_saver.jar}</additionalClasspathElement>
+          </additionalClasspathElements>
+          <!-- System properties needed by jcov -->
+          <systemPropertyVariables>
+            <jcov.template>${jcov.template.xml}</jcov.template>
+            <jcov.file>${jcov.surefire.coverage.xml}</jcov.file>
+          </systemPropertyVariables>
+          [...]
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <!-- Use the jcov instrumented class file directory -->
+          <classesDirectory>${project.build.instr.outputDirectory}</classesDirectory>
+          <!-- Add jcov_file_saver.jar to classpath -->
+          <additionalClasspathElements>
+            <additionalClasspathElement>${jcov_file_saver.jar}</additionalClasspathElement>
+          </additionalClasspathElements>
+          <!-- System properties needed by jcov -->
+          <systemPropertyVariables>
+            <jcov.template>${jcov.template.xml}</jcov.template>
+            <jcov.file>${jcov.failsafe.coverage.xml}</jcov.file>
+          </systemPropertyVariables>
+          [...]
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      [...]
+    </plugins>
+  </build>
+  [...]
+</project>
++-----
+
+* Merging Coverage Files
+
+  JCov is able to merge multiple coverage files to produce a combined result.
+  This is particularly useful for combining results from unit and integration
+  tests.
+
+  The <<<merge>>> goal merges all coverage files in the <<<coverageFiles>>>
+  configuration and saves the result to <<<combinedCoverageFile>>>.  The
+  following example shows a configuration that will merge the coverage
+  results of surefire and failsafe:
+
++-----
+<project>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.metricspace</groupId>
+        <artifactId>jcov-maven-plugin</artifactId>
+        <configuration>
+          <combinedCoverageFile>${jcov.combined.coverage.xml}</combinedCoverageFile>
+          <coverageFiles>
+            <coverageFile>${jcov.surefire.coverage.xml}</coverageFile>
+            <coverageFile>${jcov.failsafe.coverage.xml}</coverageFile>
+          </coverageFiles>
+          [...]
+        </configuration>
+        <executions>
+          [...]
+          <execution>
+            <id>merge-reports</id>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>
++-----
+
+* Generating Reports
+
+  The final step to coverage reporting is to generate the reports.  This
+  is done using the reporting plugin.  The reporting plugin will generate
+  a separate report for each configured <<<coverageFile>>>, as well as
+  the <<<combinedCoverageFile>>> if one has been configured.

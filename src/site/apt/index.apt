@@ -1,0 +1,66 @@
+ ------
+ Usage
+ ------
+ Eric L. McCorkle
+ ------
+ February 24th, 2018
+ ------
+~~ Copyright (c) 2018, Eric McCorkle. All rights reserved.
+~~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+~~
+~~ This code is free software; you can redistribute it and/or modify it
+~~ under the terms of the GNU General Public License version 2 only, as
+~~ published by the Free Software Foundation.  Oracle designates this
+~~ particular file as subject to the "Classpath" exception as provided
+~~ by Oracle in the LICENSE file that accompanied this code.
+~~
+~~ This code is distributed in the hope that it will be useful, but WITHOUT
+~~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+~~ FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+~~ version 2 for more details (a copy is included in the LICENSE file that
+~~ accompanied this code).
+~~
+~~ You should have received a copy of the GNU General Public License version
+~~ 2 along with this work; if not, write to the Free Software Foundation,
+~~ Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+JCov Plugin
+
+ The JCov Plugin manages use of the JCov coverage reporting tool for a
+ Maven project
+
+* Goals Overview
+
+   The JCov Plugin has two goals:
+
+   * {{{./instrument-mojo.html}jcov:instrument}} Instrument classes
+
+   * {{{./merge-mojo.html}jcov:merge}} Merge coverage files
+
+* Usage
+
+  General instructions on how to use the JCov Plugin can be found on the {{{./usage.html}usage page}}. Some more
+  specific use cases are described in the examples given below.
+
+  In case you still have questions regarding the plugin's usage, please have a look at the {{{./faq.html}FAQ}} and feel
+  free to contact the {{{./mail-lists.html}user mailing list}}. The posts to the mailing list are archived and could
+  already contain the answer to your question as part of an older thread.
+
+  If you feel like the plugin is missing a feature or has a defect, you can fill a feature request or bug report in our
+  {{{./issue-tracking.html}issue tracker}}. When creating a new issue, please provide a comprehensive description of your
+  concern. Especially for fixing bugs it is crucial that the developers can reproduce your problem. For this reason,
+  entire debug logs, POMs or most preferably little demo projects attached to the issue are very much appreciated.
+  Of course, patches are welcome, too. Contributors can check out the project from our
+  {{{./source-repository.html}source repository}} and will find supplementary information in the
+  {{{http://maven.apache.org/guides/development/guide-helping.html}guide to helping with Maven}}.
+
+* Examples
+
+   The following examples show how to use the Ant Plugin in more advanced usecases:
+
+   * {{{./examples/surefire.html}Coverage Reporting for Surefire Unit Tests}}
+
+   * {{{./examples/surefire-failsafe.html}Coverage Reporting for Surefire
+     and Failsafe Tests}}
+
+[]

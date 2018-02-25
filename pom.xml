@@ -12,6 +12,10 @@
   <url>https://github.com/emc2/maven-jcov-plugin</url>
   <inceptionYear>2018</inceptionYear>
 
+  <organization>
+    <name>None</name>
+  </organization>
+
   <scm>
     <connection>scm:git:git@github.com:emc2/maven-jcov-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:emc2/maven-jcov-plugin.git</developerConnection>
@@ -25,6 +29,19 @@
       <email>eric@metricspace.net</email>
     </developer>
   </developers>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/emc2/maven-jcov-plugin/issues</url>
+  </issueManagement>
+
+  <licenses>
+    <license>
+      <name>GPL, Version 2.0</name>
+      <url>https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html#content</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <repositories>
     <repository>
@@ -46,6 +63,9 @@
     <tools.jar>${java.home}/../lib/tools.jar</tools.jar>
     <jcov.filesaver.jar>jcov_file_saver.jar</jcov.filesaver.jar>
   </properties>
+
+  <prerequisites>
+  </prerequisites>
 
   <dependencies>
     <dependency>
@@ -122,10 +142,33 @@
           <execution>
             <id>default-descriptor</id>
             <phase>process-classes</phase>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>help-descriptor</id>
+            <goals>
+              <goal>helpmojo</goal>
+            </goals>
+            <phase>process-classes</phase>
           </execution>
         </executions>
       </plugin>
-
+<!--
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-docck-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -155,4 +198,21 @@
     </plugins>
   </build>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.4</version>
+        <configuration>
+          <show>public</show>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

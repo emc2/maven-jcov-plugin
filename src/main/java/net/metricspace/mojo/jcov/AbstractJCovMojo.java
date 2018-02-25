@@ -33,7 +33,11 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 abstract class AbstractJCovMojo extends AbstractMojo {
     /**
-     * The location to which the template file will be written.
+     * The location to which the template file will be written when
+     * instrumenting classes.  This file is necessary for merging
+     * coverage files and generating reports.
+     *
+     * @parameter
      */
     @Parameter(property = "template",
                defaultValue = "${project.build.directory}/jcov/template.xml",

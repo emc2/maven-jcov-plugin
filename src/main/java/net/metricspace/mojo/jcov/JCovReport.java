@@ -73,7 +73,7 @@ public class JCovReport extends AbstractMavenReport {
      * Base name for combined coverage file.
      */
     @Parameter(property = "combinedCoverageFile",
-               defaultValue = "${project.build.directory}/jcov/coverage/combined-coverage.xml",
+               defaultValue = "${project.build.directory}/jcov/combined-coverage.xml",
                required = true)
     private File combinedCoverageFile;
 
@@ -151,7 +151,8 @@ public class JCovReport extends AbstractMavenReport {
                                            "match exactly one group");
         }
 
-        final String repname = matcher.group(1);
+        final String repname = format.equals("cobertura") ?
+            matcher.group(1) + ".xml" : matcher.group(1);
         final File reportDir = new File(reportsDir, repname);
         final Result result = new Result(coverageFile.getPath());
 

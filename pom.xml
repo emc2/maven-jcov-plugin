@@ -119,8 +119,6 @@
       </resource>
     </resources>
 
-    <testSourceDirectory>${test.unit.srcs}</testSourceDirectory>
-
     <plugins>
       <!-- Java compiler configuration -->
       <plugin>
@@ -185,7 +183,7 @@
                 <artifactItem>
                   <groupId>com.sun</groupId>
                   <artifactId>jcov</artifactId>
-                  <version>3.0-beta-2</version>
+                  <version>3.0</version>
                   <type>jar</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.outputDirectory}</outputDirectory>

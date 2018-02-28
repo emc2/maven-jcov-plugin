@@ -46,7 +46,7 @@ public class JCovMergeMojo extends AbstractJCovMojo {
      */
     @Parameter(property = "combinedCoverageFile",
                defaultValue =
-               "${project.build.directory}/jcov/coverage/combined-coverage.xml",
+               "${project.build.directory}/jcov/combined-coverage.xml",
                required = true)
     private File combinedCoverageFile;
 

@@ -111,15 +111,21 @@ public class JCovInstrumentMojo extends AbstractJCovInstrClassesMojo {
         createFileSaverJar();
 
         try {
-            for(final Instrumentation in : getInstrumentations()) {
-                final File baseDir = in.getBaseDirectory();
-                final File instrDir = in.getInstrDirectory();
+            if (!getTemplate().exists()) {
+                for(final Instrumentation in : getInstrumentations()) {
+                    final File baseDir = in.getBaseDirectory();
+                    final File instrDir = in.getInstrDirectory();
 
-                getLog().info("Instrumenting classes in " + baseDir.getPath() +
-                              ", outputting to " + instrDir.getPath());
-                getTemplate().getParentFile().mkdirs();
-                instr.instrumentFiles(new File[] { baseDir }, instrDir, null);
-                instr.finishWork(getTemplate().getPath());
+                    getLog().info("Instrumenting classes in " +
+                                  baseDir.getPath() +
+                                  ", outputting to " + instrDir.getPath());
+                    getTemplate().getParentFile().mkdirs();
+                    instr.instrumentFiles(new File[] { baseDir },
+                                          instrDir, null);
+                    getLog().info("Generated template at " +
+                                  getTemplate().getPath());
+                    instr.finishWork(getTemplate().getPath());
+                }
             }
         } catch(final IOException e) {
             throw new MojoExecutionException(
